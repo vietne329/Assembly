@@ -1,0 +1,38 @@
+
+section .data
+	text1 db "Input something please: "
+	text2 db "You just input: "
+
+section .bss
+	input resb 16
+
+section .text
+	global _start
+
+_start:
+
+	call _printText1
+	call _getText1
+	call _printText2
+	call _printResult
+
+_printText1:
+	mov eax, 1
+	mov edi, 1
+	mov esi, text1
+	mov edx, 25
+	syscall
+	ret
+
+_printText2:
+	mov eax,1
+	mov edi,1
+	mov esi,text2
+	mov edx,18
+	syscall
+	ret
+_printResult:
+	mov eax, 1
+	mov edx ,1
+	mov esi,input
+	mov edx,
