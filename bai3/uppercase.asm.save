@@ -1,0 +1,6 @@
+section .data
+	str1 db "hello my name is Viet"
+len equ $ -str1
+
+section .bss
+

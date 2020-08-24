@@ -1,51 +1,47 @@
-
 section .data
-	text1 db "Input somthing please:"
-	text2 db "You just typing:"
+	text1 db "Input something please: "
+	len equ $ - text1
+	text2 db "You just typing: "
+	len2 equ $ - text2
 
 section .bss
 	input resb 32
-
 section .text
 	global _start
-
 _start:
 	call _printText1
 	call _getInput
 	call _printText2
 	call _printInput
 
-	mov eax,60
-	mov edi,0
-	syscall
-
+	;exit program
+	mov eax,1
+	int 0x80
 _printText1:
-	mov eax, 1
-	mov edi, 1
-	mov esi, text1
-	mov edx, 22
-	syscall
+	mov eax,4
+	mov ebx,1
+	mov ecx,text1
+	mov edx,len
+	int 0x80
 	ret
-
 _printText2:
-	mov eax, 1
-	mov edi, 1
-	mov esi, text2
-	mov edx, 18
-	syscall
+	mov eax,4
+	mov ebx,1
+	mov ecx,text2
+	mov edx,len2
+	int 0x80
 	ret
-
 _printInput:
-	mov eax, 1
-	mov edi, 1
-	mov esi, input
-	mov edx, 32
-	syscall
+	mov eax,4
+	mov ebx,1
+	mov ecx,input
+	mov edx,32
+	int 0x80
 	ret
 _getInput:
-	mov eax,0
-	mov edi,0
-	mov esi,input
+	mov eax,3
+	mov ebx,2
+	mov ecx,input
 	mov edx,32
-	syscall
+	int 0x80
 	ret
