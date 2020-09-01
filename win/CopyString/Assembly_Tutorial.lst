@@ -1,0 +1,88 @@
+Microsoft (R) Macro Assembler Version 14.20.27508.1	    08/28/20 19:08:47
+reverse.asm.asm						     Page 1 - 1
+
+
+				; Reverse string (reverse.asm)
+
+				.386
+				.model flat,stdcall
+				.stack 4096
+				ExitProcess PROTO,dwExitCode:DWORD
+
+ 00000000			.data
+ 00000000 61 62 63 64 65	aName BYTE "abcdefghijklmnoq",0
+	   66 67 68 69 6A
+	   6B 6C 6D 6E 6F
+	   71 00
+ 00000011 = 00000010		nameSize = ($ - aName) - 1
+
+ 00000000			.code
+ 00000000			main PROC
+					;push the name on stack
+ 00000000  B9 00000010			mov ecx, nameSize
+ 00000005  BE 00000000			mov esi, 0
+ 0000000A			L1:
+ 0000000A  0F B6 86			movzx eax,aName[esi]
+	   00000000 R
+ 00000011  50				push eax
+ 00000012  46				inc esi
+ 00000013  E2 F5			loop  L1
+
+					;Pop the name from stack, in reverse, and store in aName array
+ 00000015  B9 00000010			mov ecx, nameSize
+ 0000001A  BE 00000000			mov esi,0
+ 0000001F			L2:
+ 0000001F  58				pop eax
+ 00000020  88 86 00000000 R		mov aName[esi],al
+ 00000026  46				inc esi
+ 00000027  E2 F6			loop L2
+
+					INVOKE ExitProcess, 0
+ 00000029  6A 00	   *	    push   +000000000h
+ 0000002B  E8 00000000 E   *	    call   ExitProcess
+ 00000030			main ENDP
+				END main
+Microsoft (R) Macro Assembler Version 14.20.27508.1	    08/28/20 19:08:47
+reverse.asm.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000011 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 00000030 DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 00000030 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 0000000A _TEXT	
+  L2 . . . . . . . . . . . . . .	L Near	 0000001F _TEXT	
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+aName  . . . . . . . . . . . . .	Byte	 00000000 _DATA	
+nameSize . . . . . . . . . . . .	Number	 00000010h   
+
+	   0 Warnings
+	   0 Errors

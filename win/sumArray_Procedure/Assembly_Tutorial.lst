@@ -1,0 +1,91 @@
+Microsoft (R) Macro Assembler Version 14.20.27508.1	    08/29/20 11:13:25
+sumArray.asm						     Page 1 - 1
+
+
+				;Calculate sum of array using Procedure
+
+				.386
+				.model flat, stdcall
+				.stack 4096
+				ExitProcess PROTO, dwExitCode:DWORD
+
+ 00000000			.data
+ 00000000 00020000		array DWORD 20000h, 20000h, 30000h, 40000h, 50000h
+	   00020000
+	   00030000
+	   00040000
+	   00050000
+ 00000014 00000000		theSum DWORD ?
+
+ 00000000			.code
+ 00000000			main PROC
+ 00000000  BE 00000000 R		mov esi, OFFSET array
+ 00000005  B9 00000005			mov ecx, LENGTHOF array
+ 0000000A  E8 0000000C			call ArraySum
+ 0000000F  A3 00000014 R		mov theSum,eax
+
+					INVOKE ExitProcess,0
+ 00000014  6A 00	   *	    push   +000000000h
+ 00000016  E8 00000000 E   *	    call   ExitProcess
+
+ 0000001B			main ENDP
+
+ 0000001B			ArraySum PROC
+ 0000001B  56				push esi
+ 0000001C  51				push ecx 
+ 0000001D  B8 00000000			mov eax,0
+
+ 00000022			L1:
+ 00000022  03 06			add eax,[esi]
+ 00000024  83 C6 04			add esi, TYPE DWORD
+ 00000027  E2 F9			loop L1
+
+ 00000029  59				pop ecx
+ 0000002A  5E				pop esi
+ 0000002B  C3				ret
+ 0000002C			ArraySum ENDP
+				END main
+Microsoft (R) Macro Assembler Version 14.20.27508.1	    08/29/20 11:13:25
+sumArray.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+FLAT . . . . . . . . . . . . . .	GROUP
+STACK  . . . . . . . . . . . . .	32 Bit	 00001000 DWord	  Stack	  'STACK'	 
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000018 DWord	  Public  'DATA'	
+_TEXT  . . . . . . . . . . . . .	32 Bit	 0000002C DWord	  Public  'CODE'	
+
+
+Procedures, parameters, and locals:
+
+                N a m e                 Type     Value    Attr
+
+ArraySum . . . . . . . . . . . .	P Near	 0000001B _TEXT	Length= 00000011 Public STDCALL
+  L1 . . . . . . . . . . . . . .	L Near	 00000022 _TEXT	
+ExitProcess  . . . . . . . . . .	P Near	 00000000 FLAT	Length= 00000000 External STDCALL
+main . . . . . . . . . . . . . .	P Near	 00000000 _TEXT	Length= 0000001B Public STDCALL
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+@CodeSize  . . . . . . . . . . .	Number	 00000000h   
+@DataSize  . . . . . . . . . . .	Number	 00000000h   
+@Interface . . . . . . . . . . .	Number	 00000003h   
+@Model . . . . . . . . . . . . .	Number	 00000007h   
+@code  . . . . . . . . . . . . .	Text   	 _TEXT
+@data  . . . . . . . . . . . . .	Text   	 FLAT
+@fardata?  . . . . . . . . . . .	Text   	 FLAT
+@fardata . . . . . . . . . . . .	Text   	 FLAT
+@stack . . . . . . . . . . . . .	Text   	 FLAT
+array  . . . . . . . . . . . . .	DWord	 00000000 _DATA	
+theSum . . . . . . . . . . . . .	DWord	 00000014 _DATA	
+
+	   0 Warnings
+	   0 Errors
