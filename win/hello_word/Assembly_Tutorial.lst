@@ -1,11 +1,9 @@
-Microsoft (R) Macro Assembler Version 14.20.27508.1	    08/27/20 23:06:53
+Microsoft (R) Macro Assembler Version 14.20.27508.1	    09/01/20 22:16:46
 hello.asm						     Page 1 - 1
 
 
-				; Win32 Console Example #1 (Console1.asm)
-				; This program calls the following Win32 Console functions:
-				; GetStdHandle, ExitProcess, WriteConsole
-				INCLUDE Irvine32.inc
+				; print Hello world on the console window
+				include irvine32.inc  ;using library of window pi 32bit
 			      C ; Include file for Irvine32.lib             (Irvine32.inc)
 			      C 
 			      C ;OPTION CASEMAP:NONE		; optional: make identifiers case-sensitive
@@ -23,43 +21,48 @@ hello.asm						     Page 1 - 1
 			      C .NOLIST
 			      C .LIST
 			      C 
+
  00000000			.data
- = 0dh,0ah			endl EQU <0dh,0ah> ; end of line sequence
- 00000000			message LABEL BYTE
- 00000000  48 65 6C 6C 6F	BYTE "Hello World!",endl
+
+ = 0dh,0ah				endl EQU <0dh,0ah>			; endline and linefeed
+ 00000000				message LABEL BYTE 
+ 00000000  48 65 6C 6C 6F		BYTE "Hello World",endl	; save string "Hello World" to message variable.
 	   20 57 6F 72 6C
-	   64 21 0D 0A
- 0000000E 0000000E		messageSize DWORD ($ - message)
- 00000012 00000000		consoleHandle HANDLE 0 ; handle to standard output device
- 00000016 00000000		bytesWritten DWORD ? ; number of bytes written
+	   64 0D 0A
+ 0000000D 0000000D			messageSize DWORD ($-message)			; init and save size of string "message".
+
+ 00000011 00000000			consoleHandle HANDLE 0	; handle to standard ouput device
+ 00000015 00000000			byteWritten DWORD ?		
 
  00000000			.code
  00000000			main PROC
-				; Get the console output handle:
-
-				INVOKE GetStdHandle, STD_OUTPUT_HANDLE
+					;Get the console output handle
+					INVOKE GetStdHandle , STD_OUTPUT_HANDLE
  00000000  6A F5	   *	    push    -00000000Bh
  00000002  E8 00000000 E   *	    call   GetStdHandle
- 00000007  A3 00000012 R	mov consoleHandle,eax
-				; Write a string to the console:
-				INVOKE WriteConsole,
-				consoleHandle, ; console output handle
-				ADDR message, ; string pointer
-				messageSize, ; string length
-				ADDR bytesWritten, ; returns num bytes written
-				0 ; not used
+ 00000007  A3 00000011 R		mov consoleHandle, eax
+					
+					;Write  string to the console
+					INVOKE WriteConsole,
+						consoleHandle,			;console output handle
+						ADDR message,			;string pointer
+						messageSize,			;string length
+						ADDR byteWritten,		;return num bytes written
+						0					;not used, standard is 0
  0000000C  6A 00	   *	    push   +000000000h
- 0000000E  68 00000016 R   *	    push   OFFSET bytesWritten
- 00000013  FF 35 0000000E R *	    push   messageSize
+ 0000000E  68 00000015 R   *	    push   OFFSET byteWritten
+ 00000013  FF 35 0000000D R *	    push   messageSize
  00000019  68 00000000 R   *	    push   OFFSET message
- 0000001E  FF 35 00000012 R *	    push   consoleHandle
+ 0000001E  FF 35 00000011 R *	    push   consoleHandle
  00000024  E8 00000000 E   *	    call   WriteConsoleA
-				INVOKE ExitProcess,0
+
+						INVOKE ExitProcess, 0
  00000029  6A 00	   *	    push   +000000000h
  0000002B  E8 00000000 E   *	    call   ExitProcess
+
  00000030			main ENDP
 				END main
-Microsoft (R) Macro Assembler Version 14.20.27508.1	    08/27/20 23:06:53
+Microsoft (R) Macro Assembler Version 14.20.27508.1	    09/01/20 22:16:46
 hello.asm						     Symbols 2 - 1
 
 
@@ -153,7 +156,7 @@ Segments and Groups:
 
 FLAT . . . . . . . . . . . . . .	GROUP
 STACK  . . . . . . . . . . . . .	32 Bit	 00001000 Para	  Stack	  'STACK'	 
-_DATA  . . . . . . . . . . . . .	32 Bit	 0000001A Para	  Public  'DATA'	
+_DATA  . . . . . . . . . . . . .	32 Bit	 00000019 Para	  Public  'DATA'	
 _TEXT  . . . . . . . . . . . . .	32 Bit	 00000030 Para	  Public  'CODE'	
 
 
@@ -483,8 +486,8 @@ WriteConsole . . . . . . . . . .	Text   	 WriteConsoleA
 black  . . . . . . . . . . . . .	Number	 00000000h   
 blue . . . . . . . . . . . . . .	Number	 00000001h   
 brown  . . . . . . . . . . . . .	Number	 00000006h   
-bytesWritten . . . . . . . . . .	DWord	 00000016 _DATA	
-consoleHandle  . . . . . . . . .	DWord	 00000012 _DATA	
+byteWritten  . . . . . . . . . .	DWord	 00000015 _DATA	
+consoleHandle  . . . . . . . . .	DWord	 00000011 _DATA	
 cyan . . . . . . . . . . . . . .	Number	 00000003h   
 endl . . . . . . . . . . . . . .	Text   	 0dh,0ah
 exit . . . . . . . . . . . . . .	Text   	 INVOKE ExitProcess,0
@@ -497,7 +500,7 @@ lightGreen . . . . . . . . . . .	Number	 0000000Ah
 lightMagenta . . . . . . . . . .	Number	 0000000Dh   
 lightRed . . . . . . . . . . . .	Number	 0000000Ch   
 magenta  . . . . . . . . . . . .	Number	 00000005h   
-messageSize  . . . . . . . . . .	DWord	 0000000E _DATA	
+messageSize  . . . . . . . . . .	DWord	 0000000D _DATA	
 message  . . . . . . . . . . . .	Byte	 00000000 _DATA	
 red  . . . . . . . . . . . . . .	Number	 00000004h   
 white  . . . . . . . . . . . . .	Number	 0000000Fh   
